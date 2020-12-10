@@ -10,10 +10,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -25,11 +29,11 @@ class TodoServiceTest {
 
     private List<Todo> createDummyTodos() {
         List<Todo> allTodos = new ArrayList<>();
-        allTodos.add(new Todo("1", "text1", true, null));
-        allTodos.add(new Todo("2", "text2", false, null));
-        allTodos.add(new Todo("3", "text3", true, null));
-        allTodos.add(new Todo("4", "text4", false, null));
-        allTodos.add(new Todo("5", "text5", true, null));
+        allTodos.add(new Todo("1", "text1", true, Collections.emptyList()));
+        allTodos.add(new Todo("2", "text2", false, Collections.emptyList()));
+        allTodos.add(new Todo("3", "text3", true, Collections.emptyList()));
+        allTodos.add(new Todo("4", "text4", false, Collections.emptyList()));
+        allTodos.add(new Todo("5", "text5", true, Collections.emptyList()));
         return allTodos;
     }
 
@@ -44,5 +48,19 @@ class TodoServiceTest {
 
         //then
         assertEquals(createDummyTodos().size(), actual.size());
+    }
+
+    @Test
+    void should_return_required_todo_when_getById_given_a_valid_todo_id() {
+        //given
+        final List<Todo> expected = createDummyTodos();
+        when(todosRepository.findById(anyString())).thenReturn(Optional.of(expected.get(1)));
+
+        //when
+        final Todo actual = todoService.getById("2");
+
+        //then
+//        verify(todosRepository, times(1)).findById("2");
+        assertEquals(expected.get(1), actual);
     }
 }

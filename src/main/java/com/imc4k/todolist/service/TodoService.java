@@ -7,6 +7,7 @@ import exception.TodoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,12 +24,18 @@ public class TodoService {
     }
 
     public Todo createTodo(Todo newTodo) {
+        if (newTodo.getDone() == null) {
+            newTodo.setDone(false);
+        }
+        if (newTodo.getLabelIds() == null) {
+            newTodo.setLabelIds(Collections.emptyList());
+        }
         return todosRepository.save(newTodo);
     }
 
     public Todo update(Todo updatedTodo) {
         this.getById(updatedTodo.getId());
-        return todosRepository.save(updatedTodo);
+        return createTodo(updatedTodo);
     }
 
     public void delete(String id) {

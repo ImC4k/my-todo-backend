@@ -97,6 +97,24 @@ class TodoServiceTest {
     }
 
     @Test
+    void should_return_todo_with_default_values_when_createLabel_given_input_todo_null_fields() {
+        //given
+        Todo todoRequest = new Todo("test", null, null);
+        Todo expected = new Todo("test", false, Collections.emptyList());
+        when(todosRepository.save(todoRequest)).thenReturn(expected);
+
+        //when
+        todoService.createTodo(todoRequest);
+        final ArgumentCaptor<Todo> todoArgumentCaptor = ArgumentCaptor.forClass(Todo.class);
+        verify(todosRepository, times(1)).save(todoArgumentCaptor.capture());
+
+        //then
+        final Todo actual = todoArgumentCaptor.getValue();
+        assertEquals(expected.getText(), actual.getText());
+        assertEquals(expected.getDone(), actual.getDone());
+    }
+
+    @Test
     void should_return_updated_todo_when_update_given_valid_id() {
         //given
         Todo updatedTodo = new Todo("1", "original", true, Stream.of("1", "2", "3").collect(Collectors.toList()));

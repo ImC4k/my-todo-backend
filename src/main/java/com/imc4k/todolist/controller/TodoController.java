@@ -38,7 +38,7 @@ public class TodoController {
 
     @PutMapping("/{id}")
     public TodoResponse update(@PathVariable String id, @RequestBody TodoUpdateRequest todoUpdateRequest) {
-        return getTodoResponse(todoService.update(todoMapper.toEntity(todoUpdateRequest)));
+        return getTodoResponse(todoService.update(todoMapper.toEntity(id, todoUpdateRequest)));
     }
 
     @DeleteMapping("/{id}")
@@ -48,7 +48,7 @@ public class TodoController {
     }
 
     private TodoResponse getTodoResponse(com.imc4k.todolist.model.Todo todo) {
-        List<Label> labels = todo.getLabelIds() != null? todo.getLabelIds().stream().map(labelService::getById).collect(Collectors.toList()) : null;
+        List<Label> labels = todo.getLabelIds().stream().map(labelService::getById).collect(Collectors.toList());
         return todoMapper.toResponse(todo, labels);
     }
 }

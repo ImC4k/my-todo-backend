@@ -8,6 +8,7 @@ import com.imc4k.todolist.model.Todo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -19,12 +20,15 @@ public class TodoMapper {
     public Todo toEntity(TodoRequest todoRequest) {
         Todo todo = new Todo();
         BeanUtils.copyProperties(todoRequest, todo);
+        todo.setDone(false);
+        todo.setLabelIds(Collections.emptyList());
         return todo;
     }
 
-    public Todo toEntity(TodoUpdateRequest todoRequest) {
+    public Todo toEntity(String id, TodoUpdateRequest todoRequest) {
         Todo todo = new Todo();
         BeanUtils.copyProperties(todoRequest, todo);
+        todo.setId(id);
         return todo;
     }
 }

@@ -1,4 +1,4 @@
-package com.ImC4k.todolist.model;
+package com.imc4k.todolist.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;

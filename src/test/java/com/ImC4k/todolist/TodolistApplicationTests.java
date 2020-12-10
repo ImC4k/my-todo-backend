@@ -1,4 +1,4 @@
-package com.ImC4k.todolist;
+package com.imc4k.todolist;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

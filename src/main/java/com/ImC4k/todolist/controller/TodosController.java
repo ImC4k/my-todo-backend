@@ -1,4 +1,4 @@
-package com.ImC4k.todolist.controller;
+package com.imc4k.todolist.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

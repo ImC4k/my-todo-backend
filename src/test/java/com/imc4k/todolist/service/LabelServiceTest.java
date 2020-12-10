@@ -2,9 +2,12 @@ package com.imc4k.todolist.service;
 
 import com.imc4k.todolist.model.Label;
 import com.imc4k.todolist.repository.LabelRepository;
+import exception.InvalidColorException;
+import exception.LabelAlreadyExistException;
 import exception.LabelNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,11 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -74,5 +79,48 @@ public class LabelServiceTest {
 
         //then
         assertEquals("Label not found", exception.getMessage());
+    }
+
+    @Test
+    void should_return_newly_created_label_when_createLabel_given_valid_label_info() throws InvalidColorException {
+        //given
+        Label labelRequest = new Label("test", "#0F0F0F");
+        Label expected = new Label("test", "#0F0F0F");
+        when(labelRepository.save(labelRequest)).thenReturn(expected);
+
+        //when
+        labelService.createLabel(labelRequest);
+        final ArgumentCaptor<Label>  labelArgumentCaptor = ArgumentCaptor.forClass(Label.class);
+        verify(labelRepository, times(1)).save(labelArgumentCaptor.capture());
+
+        //then
+        final Label actual = labelArgumentCaptor.getValue();
+        assertEquals(expected.getText(), actual.getText());
+        assertEquals(expected.getColor(), actual.getColor());
+    }
+
+    @Test
+    void should_throw_InvalidColorException_when_createLabel_given_invalid_color_hex_code() {
+        //given
+        Label labelRequest = new Label("test", "invalid color code");
+
+        //when
+        Exception exception = assertThrows(InvalidColorException.class, ()-> labelService.createLabel(labelRequest));
+
+        //then
+        assertEquals("Invalid color", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_LabelAlreadyExistException_when_createLabel_given_label_text_already_exist_in_repository() {
+        //given
+        Label labelRequest = new Label("test", "#000000");
+        when(labelRepository.findAllByText(labelRequest.getText())).thenReturn(Optional.of(Stream.of(new Label("test", "#333333")).collect(Collectors.toList())));
+
+        //when
+        Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.createLabel(labelRequest));
+
+        //then
+        assertEquals("Label already exist", exception.getMessage());
     }
 }

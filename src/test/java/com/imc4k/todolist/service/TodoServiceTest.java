@@ -56,14 +56,14 @@ class TodoServiceTest {
     @Test
     void should_return_required_todo_when_getById_given_a_valid_todo_id() {
         //given
-        final List<Todo> expected = createDummyTodos();
-        when(todosRepository.findById(anyString())).thenReturn(Optional.of(expected.get(1)));
+        final List<Todo> all = createDummyTodos();
+        when(todosRepository.findById(anyString())).thenReturn(Optional.of(all.get(1)));
 
         //when
         final Todo actual = todoService.getById("2");
 
         //then
-        assertEquals(expected.get(1), actual);
+        assertEquals(all.get(1), actual);
     }
 
     @Test

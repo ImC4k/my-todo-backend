@@ -2,6 +2,7 @@ package com.imc4k.todolist.service;
 
 import com.imc4k.todolist.model.Label;
 import com.imc4k.todolist.repository.LabelRepository;
+import exception.LabelNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,8 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -45,5 +49,30 @@ public class LabelServiceTest {
         
         //then
         assertEquals(createDummyLabels().size(), actual.size());
+    }
+
+    @Test
+    void should_return_required_label_when_getById_given_a_valid_label_id() {
+        //given
+        final List<Label> allTodos = createDummyLabels();
+        when(labelRepository.findById(anyString())).thenReturn(Optional.of(allTodos.get(1)));
+
+        //when
+        final Label actual = labelService.getById("2");
+
+        //then
+        assertEquals(allTodos.get(1), actual);
+    }
+
+    @Test
+    void should_throw_LabelNotFoundException_when_getById_given_invalid_label_id() {
+        //given
+        when(labelRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(LabelNotFoundException.class, ()-> labelService.getById("invalid id"));
+
+        //then
+        assertEquals("Label not found", exception.getMessage());
     }
 }

@@ -14,6 +14,8 @@ import java.util.List;
 public class LabelService {
     @Autowired
     private LabelRepository labelRepository;
+    @Autowired
+    private TodoService todoService;
 
     public List<Label> getAll() {
         return labelRepository.findAll();
@@ -44,5 +46,6 @@ public class LabelService {
     public void delete(String id) {
         getById(id);
         labelRepository.deleteById(id);
+        todoService.removeLabelId(id);
     }
 }

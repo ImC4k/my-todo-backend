@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
@@ -41,5 +42,14 @@ public class TodoService {
     public void delete(String id) {
         this.getById(id);
         todosRepository.deleteById(id);
+    }
+
+    public void removeLabelId(String targetLabelId) {
+        List<Todo> todoItemsWithTargetLabel = todosRepository.findAllByLabelIdsIn(Collections.singletonList(targetLabelId));
+        todoItemsWithTargetLabel.forEach(todoItem -> {
+            List<String> remainingLabelIds = todoItem.getLabelIds().stream().filter(id -> !id.equals(targetLabelId)).collect(Collectors.toList());
+            todoItem.setLabelIds(remainingLabelIds);
+            update(todoItem);
+        });
     }
 }

@@ -170,4 +170,31 @@ class TodoServiceTest {
         //then
         assertEquals("Todo not found", exception.getMessage());
     }
+
+    @Test
+    void should_call_update_4_times_when_removeLabelId_given_originally_todo_items_have_this_id() {
+        //given
+        String targetLabelId = "target";
+        Todo todo1 = new Todo("1", "text", true, Stream.of(targetLabelId, "random tag").collect(Collectors.toList()));
+        Todo todo2 = new Todo("2", "text", true, Collections.singletonList(targetLabelId));
+        Todo todo3 = new Todo("3", "text", true, Stream.of("another random tag", targetLabelId, "123").collect(Collectors.toList()));
+        Todo todo4 = new Todo("4", "text", true, Collections.singletonList(targetLabelId));
+
+        List<Todo> todoItemsWithTargetLabel = new ArrayList<>();
+        todoItemsWithTargetLabel.add(todo1);
+        todoItemsWithTargetLabel.add(todo2);
+        todoItemsWithTargetLabel.add(todo3);
+        todoItemsWithTargetLabel.add(todo4);
+        when(todosRepository.findAllByLabelIdsIn(Collections.singletonList(targetLabelId))).thenReturn(todoItemsWithTargetLabel);
+        when(todosRepository.findById(todo1.getId())).thenReturn(Optional.of(todo1));
+        when(todosRepository.findById(todo2.getId())).thenReturn(Optional.of(todo2));
+        when(todosRepository.findById(todo3.getId())).thenReturn(Optional.of(todo3));
+        when(todosRepository.findById(todo4.getId())).thenReturn(Optional.of(todo4));
+
+        //when
+        todoService.removeLabelId(targetLabelId);
+
+        //then
+        verify(todosRepository, times(4)).save(any());
+    }
 }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -97,9 +99,9 @@ class TodoServiceTest {
     @Test
     void should_return_updated_todo__when_update_given_valid_id() {
         //given
-        Todo updatedTodo = new Todo("1", "original", true, Collections.emptyList());
+        Todo updatedTodo = new Todo("1", "original", true, Stream.of("1", "2", "3").collect(Collectors.toList()));
         Todo original = new Todo("1", "original", false, Collections.emptyList());
-        Todo expected = new Todo("1", "original", true, Collections.emptyList());
+        Todo expected = new Todo("1", "original", true, Stream.of("1", "2", "3").collect(Collectors.toList()));
         when(todosRepository.findById("1")).thenReturn(Optional.of(original));
 
         //when

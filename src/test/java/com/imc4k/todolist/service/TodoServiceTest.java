@@ -1,9 +1,7 @@
 package com.imc4k.todolist.service;
 
-import com.imc4k.todolist.dto.TodoRequest;
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
-import com.sun.org.apache.xpath.internal.Arg;
 import exception.TodoNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;

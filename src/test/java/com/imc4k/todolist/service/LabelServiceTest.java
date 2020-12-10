@@ -31,6 +31,8 @@ public class LabelServiceTest {
 
     @Mock
     private LabelRepository labelRepository;
+    @Mock
+    private TodoService todoService;
 
     private List<Label> createDummyLabels() {
         List<Label> allLabels = new ArrayList<>();
@@ -111,10 +113,10 @@ public class LabelServiceTest {
     }
 
     @Test
-    void should_throw_LabelAlreadyExistException_when_createLabel_given_label_text_already_exist_in_repository() {
+    void should_throw_LabelAlreadyExistException_when_createLabel_given_label_text_already_exist_in_repository_and_belongs_to_another_id() {
         //given
-        Label labelRequest = new Label("test", "#000000");
-        when(labelRepository.findAllByText(labelRequest.getText())).thenReturn(Stream.of(new Label("test", "#333333")).collect(Collectors.toList()));
+        Label labelRequest = new Label("1", "test", "#000000");
+        when(labelRepository.findAllByText(labelRequest.getText())).thenReturn(Stream.of(new Label("2", "test", "#333333")).collect(Collectors.toList()));
 
         //when
         Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.createLabel(labelRequest));
@@ -170,7 +172,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    void should_throw_LabelAlreadyExistException_when_update_given_valid_id_but_text_already_exist() {
+    void should_throw_LabelAlreadyExistException_when_update_given_valid_but_different_id_but_text_already_exist() {
         //given
         Label updatedLabel = new Label("1", "updated", "#3a3a3a");
         Label original = new Label("1", "original", "#000000");
@@ -185,6 +187,26 @@ public class LabelServiceTest {
     }
 
     @Test
+    void should_return_updated_label_when_update_given_valid_and_same_id_but_text_already_exist() throws InvalidColorException {
+        //given
+        Label updatedLabel = new Label("1", "original", "#3a3a3a");
+        Label original = new Label("1", "original", "#000000");
+        Label expected = new Label("1", "original", "#3a3a3a");
+        when(labelRepository.findById(updatedLabel.getId())).thenReturn(Optional.of(original));
+        when(labelRepository.findAllByText(updatedLabel.getText())).thenReturn(Stream.of(original).collect(Collectors.toList()));
+        when(labelRepository.save(any())).thenReturn(expected);
+
+        //when
+        labelService.update(updatedLabel);
+        ArgumentCaptor<Label> labelArgumentCaptor = ArgumentCaptor.forClass(Label.class);
+        verify(labelRepository, times(1)).save(labelArgumentCaptor.capture());
+
+        //then
+        final Label actual = labelArgumentCaptor.getValue();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void should_call_repository_deleteById_when_delete_given_valid_id() {
         //given
         Label labelInRepository = new Label("1", "text", "#000000");
@@ -195,6 +217,7 @@ public class LabelServiceTest {
 
         //then
         verify(labelRepository, times(1)).deleteById(labelInRepository.getId());
+        verify(todoService, times(1)).removeLabelId(labelInRepository.getId());
     }
 
     @Test

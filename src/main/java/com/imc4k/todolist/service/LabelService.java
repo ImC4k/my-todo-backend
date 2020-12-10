@@ -31,7 +31,7 @@ public class LabelService {
         }
 
         List<Label> labelsWithSameText = labelRepository.findAllByText(newLabel.getText());
-        if (labelsWithSameText.size() > 0) {
+        if (labelsWithSameText.size() > 0 && !labelsWithSameText.get(0).getId().equals(newLabel.getId())) {
             throw new LabelAlreadyExistException();
         }
 

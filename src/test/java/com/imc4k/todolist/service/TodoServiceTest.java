@@ -2,6 +2,7 @@ package com.imc4k.todolist.service;
 
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
+import exception.TodoNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -61,5 +63,17 @@ class TodoServiceTest {
 
         //then
         assertEquals(expected.get(1), actual);
+    }
+
+    @Test
+    void should_throw_TodoNotFoundException_when_getById_given_an_invalid_todo_id() {
+        //given
+        when(todosRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(TodoNotFoundException.class, ()-> todoService.getById("something"));
+
+        //then
+        assertEquals("Todo not found", exception.getMessage());
     }
 }

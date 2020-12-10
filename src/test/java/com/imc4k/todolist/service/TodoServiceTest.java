@@ -97,7 +97,7 @@ class TodoServiceTest {
     }
 
     @Test
-    void should_return_updated_todo__when_update_given_valid_id() {
+    void should_return_updated_todo_when_update_given_valid_id() {
         //given
         Todo updatedTodo = new Todo("1", "original", true, Stream.of("1", "2", "3").collect(Collectors.toList()));
         Todo original = new Todo("1", "original", false, Collections.emptyList());

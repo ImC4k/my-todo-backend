@@ -1,5 +1,6 @@
 package com.imc4k.todolist.service;
 
+import com.imc4k.todolist.dto.TodoRequest;
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
 import exception.TodoNotFoundException;
@@ -19,5 +20,9 @@ public class TodoService {
 
     public Todo getById(String id) {
         return todosRepository.findById(id).orElseThrow(TodoNotFoundException::new);
+    }
+
+    public Todo createTodo(Todo newTodo) {
+        return todosRepository.save(newTodo);
     }
 }

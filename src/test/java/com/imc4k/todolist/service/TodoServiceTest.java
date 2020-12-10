@@ -1,10 +1,13 @@
 package com.imc4k.todolist.service;
 
+import com.imc4k.todolist.dto.TodoRequest;
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
+import com.sun.org.apache.xpath.internal.Arg;
 import exception.TodoNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -75,5 +78,23 @@ class TodoServiceTest {
 
         //then
         assertEquals("Todo not found", exception.getMessage());
+    }
+
+    @Test
+    void should_return_newly_created_todo_when_createTodo_given_valid_todo_info() {
+        //given
+        Todo todoRequest = new Todo("test", false, Collections.emptyList());
+        Todo expected = new Todo("test", false, Collections.emptyList());
+        when(todosRepository.save(todoRequest)).thenReturn(expected);
+
+        //when
+        todoService.createTodo(todoRequest);
+        final ArgumentCaptor<Todo> todoArgumentCaptor = ArgumentCaptor.forClass(Todo.class);
+        verify(todosRepository, times(1)).save(todoArgumentCaptor.capture());
+
+        //then
+        final Todo actual = todoArgumentCaptor.getValue();
+        assertEquals(expected.getText(), actual.getText());
+        assertEquals(expected.getDone(), actual.getDone());
     }
 }

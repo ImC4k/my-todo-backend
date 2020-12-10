@@ -17,9 +17,9 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class TodosServiceTest {
+class TodoServiceTest {
     @InjectMocks
-    private TodosService todosService;
+    private TodoService todoService;
     @Mock
     private TodosRepository todosRepository;
 
@@ -40,7 +40,7 @@ class TodosServiceTest {
         when(todosRepository.findAll()).thenReturn(expected);
 
         //when
-        final List<Todo> actual = todosService.getAll();
+        final List<Todo> actual = todoService.getAll();
 
         //then
         assertEquals(createDummyTodos().size(), actual.size());

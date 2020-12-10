@@ -128,4 +128,29 @@ class TodoServiceTest {
         //then
         assertEquals("Todo not found", exception.getMessage());
     }
+
+    @Test
+    void should_call_repository_deleteById_when_delete_given_valid_id() {
+        //given
+        Todo todoInRepository = new Todo("1", "test", true, Collections.emptyList());
+        when(todosRepository.findById(todoInRepository.getId())).thenReturn(Optional.of(todoInRepository));
+
+        //when
+        todoService.delete(todoInRepository.getId());
+
+        //then
+        verify(todosRepository, times(1)).deleteById(todoInRepository.getId());
+    }
+
+    @Test
+    void should_throw_TodoNotFoundException_when_delete_given_invalid_id() {
+        //given
+        when(todosRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(TodoNotFoundException.class, ()-> todoService.delete("invalid id"));
+
+        //then
+        assertEquals("Todo not found", exception.getMessage());
+    }
 }

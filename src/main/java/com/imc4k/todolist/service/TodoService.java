@@ -30,4 +30,9 @@ public class TodoService {
         this.getById(updatedTodo.getId());
         return todosRepository.save(updatedTodo);
     }
+
+    public void delete(String id) {
+        this.getById(id);
+        todosRepository.deleteById(id);
+    }
 }

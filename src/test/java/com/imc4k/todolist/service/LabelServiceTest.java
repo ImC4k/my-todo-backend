@@ -19,8 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -119,6 +118,67 @@ public class LabelServiceTest {
 
         //when
         Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.createLabel(labelRequest));
+
+        //then
+        assertEquals("Label already exist", exception.getMessage());
+    }
+
+    @Test
+    void should_return_updated_label_when_update_given_valid_id_and_info() throws InvalidColorException {
+        //given
+        Label updatedLabel = new Label("1", "updated", "#000000");
+        Label original = new Label("1", "original", "#000000");
+        Label expected = new Label("1", "updated", "#000000");
+        when(labelRepository.findById("1")).thenReturn(Optional.of(original));
+
+        //when
+        labelService.update(updatedLabel);
+        final ArgumentCaptor<Label> labelArgumentCaptor = ArgumentCaptor.forClass(Label.class);
+        verify(labelRepository, times(1)).save(labelArgumentCaptor.capture());
+
+        //then
+        final Label actual = labelArgumentCaptor.getValue();
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void should_throw_LabelNotFoundException_when_update_given_invalid_id() {
+        //given
+        Label updatedLabel = new Label("invalid id", "updated", "#000000");
+        when(labelRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(LabelNotFoundException.class, ()-> labelService.update(updatedLabel));
+
+        //then
+        assertEquals("Label not found", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_InvalidColorException_when_update_given_valid_id_but_invalid_color_code() {
+        //given
+        Label updatedLabel = new Label("1", "updated", "invalid color code");
+        Label original = new Label("1", "original", "#000000");
+        when(labelRepository.findById("1")).thenReturn(Optional.of(original));
+
+        //when
+        Exception exception = assertThrows(InvalidColorException.class, ()-> labelService.update(updatedLabel));
+
+        //then
+        assertEquals("Invalid color", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_LabelAlreadyExistException_when_update_given_valid_id_but_text_already_exist() {
+        //given
+        Label updatedLabel = new Label("1", "updated", "#3a3a3a");
+        Label original = new Label("1", "original", "#000000");
+        when(labelRepository.findById(updatedLabel.getId())).thenReturn(Optional.of(original));
+        when(labelRepository.findAllByText(updatedLabel.getText())).thenReturn(Optional.of(Stream.of(new Label("2", "updated", "#000000")).collect(Collectors.toList())));
+
+        //when
+        Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.update(updatedLabel));
 
         //then
         assertEquals("Label already exist", exception.getMessage());

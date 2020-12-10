@@ -36,4 +36,9 @@ public class LabelService {
 
         return labelRepository.save(newLabel);
     }
+
+    public Label update(Label updatedLabel) throws InvalidColorException {
+        getById(updatedLabel.getId());
+        return createLabel(updatedLabel);
+    }
 }

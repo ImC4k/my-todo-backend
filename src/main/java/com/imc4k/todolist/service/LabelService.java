@@ -41,4 +41,9 @@ public class LabelService {
         getById(updatedLabel.getId());
         return createLabel(updatedLabel);
     }
+
+    public void delete(String id) {
+        getById(id);
+        labelRepository.deleteById(id);
+    }
 }

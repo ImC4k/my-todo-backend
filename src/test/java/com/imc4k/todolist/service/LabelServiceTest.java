@@ -183,4 +183,29 @@ public class LabelServiceTest {
         //then
         assertEquals("Label already exist", exception.getMessage());
     }
+
+    @Test
+    void should_call_repository_deleteById_when_delete_given_valid_id() {
+        //given
+        Label labelInRepository = new Label("1", "text", "#000000");
+        when(labelRepository.findById(labelInRepository.getId())).thenReturn(Optional.of(labelInRepository));
+
+        //when
+        labelService.delete(labelInRepository.getId());
+
+        //then
+        verify(labelRepository, times(1)).deleteById(labelInRepository.getId());
+    }
+
+    @Test
+    void should_throw_LabelNotFoundException_when_delete_given_invalid_id() {
+        //given
+        when(labelRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(LabelNotFoundException.class, ()-> labelService.delete("invalid id"));
+
+        //then
+        assertEquals("Label not found", exception.getMessage());
+    }
 }

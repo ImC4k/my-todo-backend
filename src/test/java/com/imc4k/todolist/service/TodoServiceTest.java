@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -96,5 +95,37 @@ class TodoServiceTest {
         final Todo actual = todoArgumentCaptor.getValue();
         assertEquals(expected.getText(), actual.getText());
         assertEquals(expected.getDone(), actual.getDone());
+    }
+
+    @Test
+    void should_return_updated_todo__when_update_given_valid_id() {
+        //given
+        Todo updatedTodo = new Todo("1", "original", true, Collections.emptyList());
+        Todo original = new Todo("1", "original", false, Collections.emptyList());
+        Todo expected = new Todo("1", "original", true, Collections.emptyList());
+        when(todosRepository.findById("1")).thenReturn(Optional.of(original));
+
+        //when
+        todoService.update(updatedTodo);
+        final ArgumentCaptor<Todo> todoArgumentCaptor = ArgumentCaptor.forClass(Todo.class);
+        verify(todosRepository, times(1)).save(todoArgumentCaptor.capture());
+
+        //then
+        final Todo actual = todoArgumentCaptor.getValue();
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void should_throw_TodoNotFoundException_when_update_given_invalid_id() {
+        //given
+        Todo updatedTodo = new Todo("1", "original", true, Collections.emptyList());
+        when(todosRepository.findById(updatedTodo.getId())).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(TodoNotFoundException.class, ()-> todoService.update(updatedTodo));
+
+        //then
+        assertEquals("Todo not found", exception.getMessage());
     }
 }

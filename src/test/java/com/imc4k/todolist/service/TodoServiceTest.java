@@ -60,7 +60,6 @@ class TodoServiceTest {
         final Todo actual = todoService.getById("2");
 
         //then
-//        verify(todosRepository, times(1)).findById("2");
         assertEquals(expected.get(1), actual);
     }
 }

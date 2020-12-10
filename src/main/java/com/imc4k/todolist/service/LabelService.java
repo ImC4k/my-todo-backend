@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LabelService {
@@ -29,8 +28,8 @@ public class LabelService {
             throw new InvalidColorException();
         }
 
-        Optional<List<Label>> labelsWithSameText = labelRepository.findAllByText(newLabel.getText());
-        if (labelsWithSameText.isPresent()) {
+        List<Label> labelsWithSameText = labelRepository.findAllByText(newLabel.getText());
+        if (labelsWithSameText.size() > 0) {
             throw new LabelAlreadyExistException();
         }
 

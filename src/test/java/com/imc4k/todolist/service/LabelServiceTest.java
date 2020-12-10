@@ -114,7 +114,7 @@ public class LabelServiceTest {
     void should_throw_LabelAlreadyExistException_when_createLabel_given_label_text_already_exist_in_repository() {
         //given
         Label labelRequest = new Label("test", "#000000");
-        when(labelRepository.findAllByText(labelRequest.getText())).thenReturn(Optional.of(Stream.of(new Label("test", "#333333")).collect(Collectors.toList())));
+        when(labelRepository.findAllByText(labelRequest.getText())).thenReturn(Stream.of(new Label("test", "#333333")).collect(Collectors.toList()));
 
         //when
         Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.createLabel(labelRequest));
@@ -175,7 +175,7 @@ public class LabelServiceTest {
         Label updatedLabel = new Label("1", "updated", "#3a3a3a");
         Label original = new Label("1", "original", "#000000");
         when(labelRepository.findById(updatedLabel.getId())).thenReturn(Optional.of(original));
-        when(labelRepository.findAllByText(updatedLabel.getText())).thenReturn(Optional.of(Stream.of(new Label("2", "updated", "#000000")).collect(Collectors.toList())));
+        when(labelRepository.findAllByText(updatedLabel.getText())).thenReturn(Stream.of(new Label("2", "updated", "#000000")).collect(Collectors.toList()));
 
         //when
         Exception exception = assertThrows(LabelAlreadyExistException.class, ()-> labelService.update(updatedLabel));

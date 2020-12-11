@@ -2,7 +2,7 @@ package com.imc4k.todolist.service;
 
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
-import exception.TodoNotFoundException;
+import com.imc4k.todolist.exception.TodoNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

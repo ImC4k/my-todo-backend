@@ -2,9 +2,9 @@ package com.imc4k.todolist.service;
 
 import com.imc4k.todolist.model.Label;
 import com.imc4k.todolist.repository.LabelRepository;
-import exception.InvalidColorException;
-import exception.LabelAlreadyExistException;
-import exception.LabelNotFoundException;
+import com.imc4k.todolist.exception.InvalidColorException;
+import com.imc4k.todolist.exception.LabelAlreadyExistException;
+import com.imc4k.todolist.exception.LabelNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

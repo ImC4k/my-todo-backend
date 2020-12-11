@@ -1,9 +1,9 @@
 package com.imc4k.todolist.advice;
 
-import exception.InvalidColorException;
-import exception.LabelAlreadyExistException;
-import exception.LabelNotFoundException;
-import exception.TodoNotFoundException;
+import com.imc4k.todolist.exception.InvalidColorException;
+import com.imc4k.todolist.exception.LabelAlreadyExistException;
+import com.imc4k.todolist.exception.LabelNotFoundException;
+import com.imc4k.todolist.exception.TodoNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

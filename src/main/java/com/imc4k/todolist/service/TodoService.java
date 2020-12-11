@@ -1,9 +1,8 @@
 package com.imc4k.todolist.service;
 
-import com.imc4k.todolist.dto.TodoRequest;
 import com.imc4k.todolist.model.Todo;
 import com.imc4k.todolist.repository.TodosRepository;
-import exception.TodoNotFoundException;
+import com.imc4k.todolist.exception.TodoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

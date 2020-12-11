@@ -1,4 +1,4 @@
-package exception;
+package com.imc4k.todolist.exception;
 
 public class TodoNotFoundException extends RuntimeException{
     public TodoNotFoundException() {

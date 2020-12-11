@@ -4,7 +4,7 @@ import com.imc4k.todolist.dto.LabelRequest;
 import com.imc4k.todolist.mapper.LabelMapper;
 import com.imc4k.todolist.model.Label;
 import com.imc4k.todolist.service.LabelService;
-import exception.InvalidColorException;
+import com.imc4k.todolist.exception.InvalidColorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
